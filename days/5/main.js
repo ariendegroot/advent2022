@@ -1,3 +1,5 @@
+const { inspect } = require("util");
+
 let input = require("fs").readFileSync("./source.txt").toString().split("\n");
 
 const crates = {
@@ -19,9 +21,24 @@ const moveCrates = (amount, origin, destination) => {
   }
 };
 
+const moveCratesInstant = (amount, origin, destination) => {
+  console.log(amount, origin, destination);
+  const movingCrates = [];
+  for (let i = 0; i < amount; i++) {
+    const crate = crates[origin].pop();
+    movingCrates.push(crate);
+  }
+  const reversedCrates = movingCrates.reverse();
+  reversedCrates.forEach(crate => {
+    crates[destination].push(crate);
+  })
+}
+
 const parseInstructions = (instructionLine) => {
-  let amount = instructionLine.split(" ");
+  let newLine = instructionLine.trim();
+  let amount = newLine.split(" ");
   moveCrates(+amount[1],+amount[3],+amount[5]);
+  //moveCratesInstant(+amount[1],+amount[3],+amount[5]);
 };
 
 input.forEach((crate) => {
@@ -34,4 +51,6 @@ for (const [key, value] of Object.entries(crates)) {
   returnString = returnString + lastChar
 }
 
-console.log("Answer part 1: " + returnString);
+console.log(crates);
+//console.log("Answer part 1: " + returnString);
+console.log("Answer part 2: " + returnString);
