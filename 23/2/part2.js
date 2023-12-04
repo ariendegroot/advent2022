@@ -6,6 +6,7 @@ const input = require("fs")
 
 const roundResults = [];
 const roundScores = [];
+let grandTotal = 0;
 
 input.forEach((game, index) => {
   const gameSplit = game.split(":");
@@ -15,38 +16,29 @@ input.forEach((game, index) => {
 });
 
 function getScore(round, points) {
-  const totals = {};
-  const limits = {
-    red: 12,
-    green: 13,
-    blue: 14
+  const minCubes = {
+    red: 0,
+    green: 0,
+    blue: 0
   }
   round.forEach((item) => {
     const scores = item.split(",");
     scores.forEach(score => {
       score = score.trim();
       const [value, item] = score.split(" ");
-      console.log(value, limits[item])
-      if(+value > limits[item]) { 
-        roundScores.push(points);
-        return;
+      if(+value > minCubes[item]) { 
+        minCubes[item] = +value;
       }   
     })
   })
-  return totals;
+  grandTotal = grandTotal + getTotal(minCubes);
+  return minCubes;
 }
 
-let grandTotal = 0;
-let uniqueRounds = [...new Set(roundScores)];
+function getTotal(item) {
+  return item.red * item.blue * item.green;
+}
 
-input.forEach((g, i) => {
-  const gameNumber = i + 1;
-  if(uniqueRounds.includes(gameNumber)) {
-    console.log(`${gameNumber} is a valid game`);
-  } else {
-    console.log(`${gameNumber} is an invalid game`);
-    grandTotal = grandTotal + gameNumber;
-  }
-});
+console.log(roundResults);
 
-console.log("GRANDTOTAL:::::", grandTotal);
+console.log(grandTotal);
